@@ -35,5 +35,5 @@ The best way to contact the authors is to submit an issue, be it a support reque
 
 References
 -------------------------------------------------------------------
-1: https://www.drupal.org/u/incursus
-2: http://incurs.us
+1. https://www.drupal.org/u/incursus
+2. http://incurs.us
