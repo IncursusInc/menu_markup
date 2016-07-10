@@ -1,0 +1,7 @@
+menu_markup_configure:
+  path: 'admin/config/menu_markup'
+  defaults:
+    _form: '\Drupal\menu_markup\Form\ConfigureForm'
+    _title: 'Menu Markup Configuration Page'
+  requirements:
+    _permission: 'administer site configuration'

@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * @file
+ * Contains menu_markup.module
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_install().
+ */
+function mymodule_install() {
+  $t = get_t();
+  drupal_set_message($t("Congrats! menu_markup settings are available under !link", 
+    array( '!link' => l(t('admin/config/menu_markup'),  'admin/ocnfig/menu_markup'))
+  ));
+}
+
+/**
+ * Implements hook_menu().
+ */
+function menu_markup_menu() 
+{
+  $items['admin/config/system/menu_markup'] = array(
+    'title' => 'Menu Markup Configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menu_markup_form'),
+    'access arguments' => array('administer users'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+ 
+  return $items;
+}
+
+/**
+ * Admin form to configure markup for menu titles
+ */
+function menu_markup_form($form, &$form_state) 
+{
+  $form['menu_markup_configuration'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Menu Markup Configuration'),
+    '#rows' => 5,
+    '#required' => TRUE,
+  	'#default_value' => variable_get('menu_markup_configuration', ''),
+  );
+ 
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ */
+function menu_markup_menu_links_discovered_alter(&$links) 
+{
+
+  // Fetch the configuration for the menu_markup module
+  $config = \Drupal::config('menu_markup.settings');
+  $storedSettings = $config->get('config');
+
+  // Parse the configuration into something usable
+  $markupOptions = array();
+  $lines = preg_split('/\r\n|[\r\n]/', $storedSettings);
+
+  foreach($lines as $line) {
+  	$tmp = explode('|', $line);
+
+  	if(count($tmp) > 0)
+  		$markupOptions[ $tmp[0] ] = $tmp;
+  }	
+
+  foreach($links as $index => $link) {
+  	if(@array_key_exists($link['title'], $markupOptions))
+  		$links[$index]['title'] = t($markupOptions[$link['title']][1] . $links[$index]['title'] . $markupOptions[$link['title']][2]);
+  }
+
+}

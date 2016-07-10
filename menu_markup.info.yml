@@ -1,0 +1,6 @@
+name: Menu Markup
+type: module
+description: Allows markup to be used in menu link text
+core: 8.x
+configure: menu_markup_configure
+version: '8.x-1.0-beta1'
