@@ -19,8 +19,11 @@ Drupal 8.1.x
 
 # Example configuration lines
 
-<code>Home|<span class="fa fa-home"></span>&nbsp;|</code>
-<code>Some Menu Title|<span class="fa fa-home"></span>&nbsp;<strong>|</strong></code>
+```
+Home|<span class="fa fa-home"></span>&nbsp;|
+Some Menu Title|<span class="fa fa-home"></span>&nbsp;<strong>|</strong>
+...
+```
 
 Credits / contact
 -------------------------------------------------------------------
