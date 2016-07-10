@@ -14,14 +14,15 @@ Drupal 8.1.x
 1. Download and install the module.
 2. Open admin/config/menu_markup/configure.
 3. Enter in your desired values, with each menu item appearing on a separate line
-4. Values should be in the format of: MENUTITLE|PREMARKUP|POSTMARKUP
-5. You will need to clear (rebuild) your Drupal cache after saving your configuration (sadly) in order to see any changes you've made.
+4. Values should be in the format of: MENUTITLE|TITLE_WITH_MARKUP
+5. A special token {{title}} can be used on the right hand side of the pipe sign to substitute in the translated original title text
+6. You will need to clear (rebuild) your Drupal cache after saving your configuration (sadly) in order to see any changes you've made.
 
 # Example configuration lines
 
 ```
-Home|<span class="fa fa-home"></span>&nbsp;|
-Some Menu Title|<span class="fa fa-home"></span>&nbsp;<strong>|</strong>
+Home|<span class="fa fa-home"></span>&nbsp;&nbsp;{{title}}
+Some Menu Title|<span class="fa fa-star"></span>&nbsp;&nbsp;<strong>{{title}}</strong>
 ...
 ```
 
