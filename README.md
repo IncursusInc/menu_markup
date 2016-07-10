@@ -14,7 +14,7 @@ Drupal 8.1.x
 1. Download and install the module.
 2. Open admin/config/menu_markup/configure.
 3. Enter in your desired values, with each menu item appearing on a separate line
-4. Values should be in the format of: MENUTITLE|TITLE_WITH_MARKUP
+4. Values should be in the format of: MENU_TITLE_TEXT|TITLE_WITH_MARKUP
 5. A special token {{title}} can be used on the right hand side of the pipe sign to substitute in the translated original title text
 6. You will need to clear (rebuild) your Drupal cache after saving your configuration (sadly) in order to see any changes you've made.
 
