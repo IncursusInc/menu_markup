@@ -13,7 +13,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 function mymodule_install() {
   $t = get_t();
   drupal_set_message($t("Congrats! menu_markup settings are available under !link", 
-    array( '!link' => l(t('admin/config/menu_markup'),  'admin/ocnfig/menu_markup'))
+    array( '!link' => l(t('admin/config/menu_markup'),  'admin/config/menu_markup'))
   ));
 }
 
