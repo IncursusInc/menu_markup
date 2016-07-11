@@ -18,6 +18,9 @@ Drupal 8.1.x
 5. A special token {{title}} can be used on the right hand side of the pipe sign to substitute in the translated original title text
 6. You will need to clear (rebuild) your Drupal cache after saving your configuration (sadly) in order to see any changes you've made.
 
+# Demo Site
+You can see a demo of this in action on the Incursus web site (http://incurs.us)
+
 # Example configuration lines
 
 ```
