@@ -1,7 +1,7 @@
 # menu_markup
 Module for Drupal 8 to allow HTML markup in menu titles.
 
-By default, Drupal 8 will not accept HTML markup as part of a menu title. This module allows you to configure markup to be shown before and after specific menu titles (including submenu items).
+By default, Drupal 8 will not accept HTML markup as part of a menu title. This module allows you to configure markup to be shown along with specific menu titles (including submenu items).
 
 This can be very handy if you want to show a glyphicon from Bootstrap or an icon from FontAwesome, etc. in front of your menu titles.
 
