@@ -10,6 +10,8 @@ This version of the module only works with the v8.0.x releases of Drupal.
 # Requirements
 Drupal 8.1.x
 
+Also, when creating menu links in Drupal, you cannot use the autocomplete functionality in the "link" field. That will not make the link "discoverable" by hook_menu_links_discovered_alter(). Instead, just type the path to the node manually into that field.
+
 # Standard usage scenario
 1. Download and install the module.
 2. Open admin/config/menu_markup/configure.
