@@ -8,7 +8,7 @@ This can be very handy if you want to show a glyphicon from Bootstrap or an icon
 This version of the module only works with the v8.0.x releases of Drupal.
 
 # Requirements
-When creating menu links in Drupal, you cannot use the autocomplete functionality in the "link" field.  That will not make the link "discoverable" by hook_menu_links_discovered_alter(). Instead, just type the path to the node manually into that field.
+Drupal 8.x
 
 Also, when creating menu links in Drupal, you cannot use the autocomplete functionality in the "link" field. That will not make the link "discoverable" by hook_menu_links_discovered_alter(). Instead, just type the path to the node manually into that field.
 
