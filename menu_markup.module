@@ -41,7 +41,7 @@ function menu_markup_form($form, &$form_state)
   $form['menu_markup_configuration'] = array(
     '#type' => 'textarea',
     '#title' => t('Menu Markup Configuration'),
-    '#rows' => 5,
+    '#rows' => 15,
     '#required' => TRUE,
   	'#default_value' => variable_get('menu_markup_configuration', ''),
   );
@@ -66,7 +66,13 @@ function menu_markup_menu_links_discovered_alter(&$links)
   	$tmp = explode('|', $line);
 
   	if(count($tmp) > 0)
-  		$markupOptions[ $tmp[0] ] = $tmp[1];
+		{
+  		$markupOptions[ $tmp[0] ]['menuTitle'] = $tmp[1];
+			if(@isset($tmp[2]))
+			{
+  			$markupOptions[ $tmp[0] ]['nodeCount'] = $tmp[2];
+			}
+		}
   }
 
   foreach($links as $index => $link) {
@@ -75,8 +81,21 @@ function menu_markup_menu_links_discovered_alter(&$links)
 			$translatedMenuTitle = t($link['title']);
 			$menuTitleStr = (string) $translatedMenuTitle;
 
-			$replacementString = $markupOptions[$link['title']];
+			// Do we have a badge count here?
+			if( @$markupOptions[$link['title']]['nodeCount'] ) {
+				$query = \Drupal::entityQuery('node')
+									->condition('type', $markupOptions[$link['title']]['nodeCount'] )
+									->condition('status', 1);
+
+				$nids = $query->execute();
+				$nodeCount = count($nids);
+			} else {
+				$nodeCount = '';
+			}
+
+			$replacementString = $markupOptions[$link['title']]['menuTitle'];
 			$replacementString = preg_replace('/\{\{\s*title\s*\}\}/', $menuTitleStr, $replacementString);
+			$replacementString = preg_replace('/\{\{\s*nodeCount\s*\}\}/', $nodeCount, $replacementString);
   		$links[$index]['title'] = t($replacementString);
 		}
   }
