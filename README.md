@@ -1,4 +1,4 @@
-# menu_markup
+# menu_markup v1.2
 Module for Drupal 8 to allow HTML markup in menu titles.
 
 By default, Drupal 8 will not accept HTML markup as part of a menu title. This module allows you to configure markup to be shown along with specific menu titles (including submenu items).
