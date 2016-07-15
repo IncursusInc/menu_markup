@@ -16,8 +16,9 @@ Also, when creating menu links in Drupal, you cannot use the autocomplete functi
 1. Download and install the module.
 2. Open admin/config/menu_markup/configure.
 3. Enter in your desired values, with each menu item appearing on a separate line
-4. Values should be in the format of: MENU_TITLE_TEXT|TITLE_WITH_MARKUP
+4. Values should be in the format of: MENU_TITLE_TEXT|TITLE_WITH_MARKUP|NODE_TYPE
 5. A special token {{title}} can be used on the right hand side of the pipe sign to substitute in the translated original title text
+6. If NODE_TYPE is specified, a special token called {{nodeCount}} will be available representing the total count of published nodes of type NODE_TYPE (useful for Bootstrap badges in menu items)
 6. You will need to clear (rebuild) your Drupal cache after saving your configuration (sadly) in order to see any changes you've made.
 
 # Demo Site
@@ -28,6 +29,7 @@ You can see a demo of this in action on the Incursus web site (http://incurs.us)
 ```
 Home|<span class="fa fa-home"></span>&nbsp;&nbsp;{{title}}
 Some Menu Title|<span class="fa fa-star"></span>&nbsp;&nbsp;<strong>{{title}}</strong>
+Articles|<span class="fa fa-star"></span>&nbsp;&nbsp;<strong>{{title}}</strong> <span class="badge">{{nodeCount}}</span>|article
 ...
 ```
 
