@@ -57,7 +57,7 @@ class ConfigureForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-		$config = \Drupal::service('config.factory')->getEditable('menu_markup.settings');
+    $config = $this->config('menu_markup.settings');
 		$config->set('config', $form_state->getValue('menu_markup_configuration'))->save();
 
 		parent::submitForm($form, $form_state);

@@ -62,22 +62,19 @@ function menu_markup_menu_links_discovered_alter(&$links)
   $markupOptions = array();
   $lines = preg_split('/\r\n|[\r\n]/', $storedSettings);
 
-  foreach($lines as $line) {
+  foreach ($lines as $line) {
   	$tmp = explode('|', $line);
 
-  	if(count($tmp) > 0)
-		{
+  	if (count($tmp) > 0) {
   		$markupOptions[ $tmp[0] ]['menuTitle'] = $tmp[1];
-			if(@isset($tmp[2]))
-			{
+			if (@isset($tmp[2])) {
   			$markupOptions[ $tmp[0] ]['nodeCount'] = $tmp[2];
 			}
 		}
   }
 
-  foreach($links as $index => $link) {
-  	if(@array_key_exists($link['title'], $markupOptions))
-		{
+  foreach ($links as $index => $link) {
+  	if (@array_key_exists($link['title'], $markupOptions)) {
 			$translatedMenuTitle = t($link['title']);
 			$menuTitleStr = (string) $translatedMenuTitle;
 
