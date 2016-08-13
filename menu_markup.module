@@ -59,7 +59,7 @@ function menu_markup_menu_links_discovered_alter(&$links)
   $config = \Drupal::config('menu_markup.settings');
   $storedSettings = $config->get('config');
 
-  // Parse the configuration into something usable
+  // Parse the configuration into something usable - one entry per line, so let's split it up
   $markupOptions = array();
   $lines = preg_split('/\r\n|[\r\n]/', $storedSettings);
 
@@ -74,6 +74,7 @@ function menu_markup_menu_links_discovered_alter(&$links)
 		}
   }
 
+	// Now, let's rebuild the menu links
   foreach ($links as $index => $link) {
   	if (@array_key_exists($link['title'], $markupOptions)) {
 			$translatedMenuTitle = t($link['title']);
