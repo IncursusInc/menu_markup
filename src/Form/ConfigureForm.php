@@ -40,6 +40,7 @@ class ConfigureForm extends ConfigFormBase {
 			'#type' => 'textarea',
 			'#title' => t('Menu Markup Configuration'),
 			'#required' => TRUE,
+			'#rows' => 10,
 			'#default_value' => $config->get('config'),
 			'#description' => t('Enter line values in the following format:  MENU TITLE|OPEN MARKUP|CLOSE MARKUP'),
 		);
