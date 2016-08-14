@@ -15,9 +15,9 @@ use Drupal\Component\Render\FormattableMarkup;
 class MenuMarkupController extends ControllerBase {
 
 	protected $configFactory;
-	public		$menuConfig;
-	public		$markupOptions;
-	public		$links;
+	private		$markupOptions;
+	private		$storedSettings;
+	private		$links;
 
 	public function __construct( ConfigFactory $configFactory, $links )
 	{
@@ -38,8 +38,7 @@ class MenuMarkupController extends ControllerBase {
 	public function parseMenuConfig() {
 
   	// Fetch the configuration for the menu_markup module
-  	$this->menuConfig = $this->configFactory->get('menu_markup.settings');
-  	$storedSettings = $this->menuConfig->get('config');
+  	$this->storedSettings = $this->configFactory->get('menu_markup.settings')->get('config');
 
   	$this->markupOptions = array();
   	$lines = preg_split('/\r\n|[\r\n]/', $storedSettings);

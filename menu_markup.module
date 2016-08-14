@@ -5,9 +5,6 @@
  * Contains menu_markup.module
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Component\Render\FormattableMarkup;
-
 use Drupal\menu_markup\Controller\MenuMarkupController;
 
 /**
