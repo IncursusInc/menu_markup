@@ -34,21 +34,34 @@ class MenuMarkupController extends ControllerBase {
     );
   }
 
-  // Parse the configuration into something usable - one entry per line, so let's split it up
+  /* 
+		Parse the configuration into something usable - one entry per line, so let's split it up
+
+		The configuration lines should be in the following format:
+
+			MENU_TITLE|REPLACEMENT_STRING|NODECOUNT
+
+		Where:
+
+			MENU_TITLE = The name of the menu item (Home, News Archive, etc.)
+			REPLACEMENT_STRING = The string containing markup to replace the MENU_TITLE with
+			NODECOUNT = An optional content type machine name which can be used to generate a badge, etc.
+	*/
+
 	public function parseMenuConfig() {
 
   	// Fetch the configuration for the menu_markup module
   	$this->storedSettings = $this->configFactory->get('menu_markup.settings')->get('config');
 
   	$this->markupOptions = array();
-  	$lines = preg_split('/\r\n|[\r\n]/', $storedSettings);
+  	$lines = preg_split('/\r\n|[\r\n]/', $this->storedSettings);
 
   	foreach ($lines as $line) {
   		$tmp = explode('|', $line);
 
   		if (count($tmp) > 0) {
   			$this->markupOptions[ $tmp[0] ]['menuTitle'] = $tmp[1];
-				if (@isset($tmp[2])) {
+				if (isset($tmp[2])) {
   				$this->markupOptions[ $tmp[0] ]['nodeCount'] = $tmp[2];
 				}
 			}
@@ -62,6 +75,7 @@ class MenuMarkupController extends ControllerBase {
 		// Now, let's rebuild the menu links
   	foreach ($this->links as $index => $link) {
   		if (@array_key_exists($link['title'], $this->markupOptions)) {
+				echo $link['title'] . "\n";
 				$translatedMenuTitle = t($link['title']);
 				$menuTitleStr = (string) $translatedMenuTitle;
 
@@ -83,6 +97,7 @@ class MenuMarkupController extends ControllerBase {
 				$replacementString = preg_replace('/\{\{\s*nodeCount\s*\}\}/', $nodeCount, $replacementString);
 
 				// This is where the magic happens - convert it!
+				echo $replacementString . "\n";
   			$this->links[$index]['title'] = new FormattableMarkup($replacementString, array());
 			}
   	}
