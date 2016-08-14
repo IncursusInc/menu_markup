@@ -8,6 +8,8 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Component\Render\FormattableMarkup;
 
+use Drupal\menu_markup\Controller\MenuMarkupController;
+
 /**
  * Implements hook_install().
  */
@@ -55,50 +57,12 @@ function menu_markup_form($form, &$form_state)
  */
 function menu_markup_menu_links_discovered_alter(&$links) 
 {
-  // Fetch the configuration for the menu_markup module
-  $config = \Drupal::config('menu_markup.settings');
-  $storedSettings = $config->get('config');
+	// Creat a new MenuMarkupController object
+	$markup = new MenuMarkupController(Drupal::service('config.factory'), $links);
 
-  // Parse the configuration into something usable - one entry per line, so let's split it up
-  $markupOptions = array();
-  $lines = preg_split('/\r\n|[\r\n]/', $storedSettings);
+	// Parse the menu config as performed in the admin panel
+	$markup->parseMenuConfig();
 
-  foreach ($lines as $line) {
-  	$tmp = explode('|', $line);
-
-  	if (count($tmp) > 0) {
-  		$markupOptions[ $tmp[0] ]['menuTitle'] = $tmp[1];
-			if (@isset($tmp[2])) {
-  			$markupOptions[ $tmp[0] ]['nodeCount'] = $tmp[2];
-			}
-		}
-  }
-
-	// Now, let's rebuild the menu links
-  foreach ($links as $index => $link) {
-  	if (@array_key_exists($link['title'], $markupOptions)) {
-			$translatedMenuTitle = t($link['title']);
-			$menuTitleStr = (string) $translatedMenuTitle;
-
-			// Do we have a badge count here?
-			if( @$markupOptions[$link['title']]['nodeCount'] ) {
-				$query = \Drupal::entityQuery('node')
-									->condition('type', $markupOptions[$link['title']]['nodeCount'] )
-									->condition('status', 1);
-
-				$nids = $query->execute();
-				$nodeCount = count($nids);
-			} else {
-				$nodeCount = '';
-			}
-
-			// Token replacement
-			$replacementString = $markupOptions[$link['title']]['menuTitle'];
-			$replacementString = preg_replace('/\{\{\s*title\s*\}\}/', $menuTitleStr, $replacementString);
-			$replacementString = preg_replace('/\{\{\s*nodeCount\s*\}\}/', $nodeCount, $replacementString);
-
-			// This is where the magic happens - convert it!
-  		$links[$index]['title'] = new FormattableMarkup($replacementString, array());
-		}
-  }
+	// Rebuild the menu links!
+	$links = $markup->rebuildMenuLinks();
 }
