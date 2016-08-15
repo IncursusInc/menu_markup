@@ -5,16 +5,16 @@
  * Contains menu_markup.module
  */
 
+use Drupal\Core\Url;
 use Drupal\menu_markup\Controller\MenuMarkupController;
 
 /**
  * Implements hook_install().
  */
 function menu_markup_install() {
-  $t = get_t();
-  drupal_set_message($t("Congrats! menu_markup settings are available under !link", 
-    array( '!link' => l(t('admin/config/menu_markup'),  'admin/config/menu_markup'))
-  ));
+	$url = Url::fromRoute('menu_markup_configure');
+
+  drupal_set_message(t('Congrats! menu_markup settings are available under ' . \Drupal::l('the configuration menu', $url)));
 }
 
 /**
