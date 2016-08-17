@@ -86,7 +86,7 @@ class MenuMarkupController extends ControllerBase
         // Now, let's rebuild the menu links
         foreach ($this->_links as $index => $link) {
             if (@array_key_exists($link['title'], $this->_markupOptions)) {
-                $translatedMenuTitle = t($link['title']);
+                $translatedMenuTitle = $this->t($link['title']);
                 $menuTitleStr = (string) $translatedMenuTitle;
 
                 // Do we have a badge count here?
