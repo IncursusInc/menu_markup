@@ -10,6 +10,8 @@ use Drupal\menu_markup\Controller\MenuMarkupController;
 
 /**
  * Implements hook_install().
+ *
+ * @return none
  */
 function menu_markup_install() 
 {
@@ -20,6 +22,8 @@ function menu_markup_install()
 
 /**
  * Implements hook_menu().
+ *
+ * @return array
  */
 function menu_markup_menu() 
 {
@@ -36,6 +40,11 @@ function menu_markup_menu()
 
 /**
  * Admin form to configure markup for menu titles
+ *
+ * @param array                                $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *
+ * @return array
  */
 function menu_markup_form($form, &$form_state) 
 {
@@ -52,6 +61,8 @@ function menu_markup_form($form, &$form_state)
 
 /**
  * Implements hook_menu_links_discovered_alter().
+ *
+ * @return none
  */
 function menu_markup_menu_links_discovered_alter(&$links) 
 {

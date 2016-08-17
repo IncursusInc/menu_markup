@@ -16,6 +16,8 @@ class ConfigureForm extends ConfigFormBase
 {
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function getFormId() 
     {
@@ -24,6 +26,8 @@ class ConfigureForm extends ConfigFormBase
 
     /** 
      * {@inheritdoc}
+     *
+     * @return array
      */
     protected function getEditableConfigNames() 
     {
@@ -34,6 +38,11 @@ class ConfigureForm extends ConfigFormBase
 
     /**
      * {@inheritdoc}
+     *
+     * @param array                                $form
+     * @param \Drupal\Core\Form\FormStateInterface $form_state
+     *
+     * @return mixed
      */
     public function buildForm(array $form, FormStateInterface $form_state) 
     {
@@ -54,6 +63,11 @@ class ConfigureForm extends ConfigFormBase
 
     /**
      * {@inheritdoc}
+     *
+     * @param array                                $form
+     * @param \Drupal\Core\Form\FormStateInterface $form_state
+     *
+     * @return none
      */
     public function validateForm(array &$form, FormStateInterface $form_state) 
     {
@@ -61,6 +75,11 @@ class ConfigureForm extends ConfigFormBase
 
     /**
      * {@inheritdoc}
+     *
+     * @param array                                $form
+     * @param \Drupal\Core\Form\FormStateInterface $form_state
+     *
+     * @return none
      */
     public function submitForm(array &$form, FormStateInterface $form_state) 
     {
