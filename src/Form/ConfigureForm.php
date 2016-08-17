@@ -46,7 +46,7 @@ class ConfigureForm extends ConfigFormBase
         '#required' => true,
         '#rows' => 10,
         '#default_value' => $config->get('config'),
-        '#description' => t('Enter line values in the following format:  MENU TITLE|OPEN MARKUP|CLOSE MARKUP'),
+        '#description' => t('Enter line values in the following format:  MENU TITLE|OPEN MARKUP|CLOSE MARKUP|OPTIONAL_CONTENT_TYPE_MACHINENAME'),
         );
 
         return parent::buildForm($form, $form_state);

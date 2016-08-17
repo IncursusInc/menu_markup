@@ -3,6 +3,9 @@
 /**
  * @file
  * Contains \Drupal\menu_markup\Controller\MenuMarkupController.
+ *
+ * This controller handles the parsing of the config and the actual 
+ * rebuilding of menu items.
  */
 
 namespace Drupal\menu_markup\Controller;
