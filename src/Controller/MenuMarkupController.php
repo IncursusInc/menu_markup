@@ -44,7 +44,7 @@ class MenuMarkupController extends ControllerBase
      *
      *  The configuration lines should be in the following format:
      *
-     *  MENU_TITLE|REPLACEMENT_STRING|NODECOUNT
+     *  MENU_TITLE|REPLACEMENT_STRING|NODE_TYPE_MACHINE_NAME
      *
      *  Where:
      *
@@ -69,7 +69,7 @@ class MenuMarkupController extends ControllerBase
             if (count($tmp) > 0) {
                 $this->_markupOptions[ $tmp[0] ]['menuTitle'] = $tmp[1];
                 if (isset($tmp[2])) {
-                     $this->_markupOptions[ $tmp[0] ]['nodeCount'] = $tmp[2];
+                     $this->_markupOptions[ $tmp[0] ]['nodeType'] = $tmp[2];
                 }
             }
         }
@@ -90,21 +90,21 @@ class MenuMarkupController extends ControllerBase
                 $menuTitleStr = (string) $translatedMenuTitle;
 
                 // Do we have a badge count here?
-                if (@$this->_markupOptions[$link['title']]['nodeCount'] ) {
+                if (@$this->_markupOptions[$link['title']]['nodeType'] ) {
                     $query = \Drupal::entityQuery('node')
-                      ->condition('type', $this->_markupOptions[$link['title']]['nodeCount'])
+                      ->condition('type', $this->_markupOptions[$link['title']]['nodeType'])
                       ->condition('status', 1);
 
                     $nids = $query->execute();
-                    $nodeCount = count($nids);
+                    $nodeType = count($nids);
                 } else {
-                    $nodeCount = '';
+                    $nodeType = '';
                 }
 
                 // Token replacement
                 $replacementString = $this->_markupOptions[$link['title']]['menuTitle'];
                 $replacementString = preg_replace('/\{\{\s*title\s*\}\}/', $menuTitleStr, $replacementString);
-                $replacementString = preg_replace('/\{\{\s*nodeCount\s*\}\}/', $nodeCount, $replacementString);
+                $replacementString = preg_replace('/\{\{\s*nodeCount\s*\}\}/', $nodeType, $replacementString);
 
                 // This is where the magic happens - convert it!
                 $this->_links[$index]['title'] = new FormattableMarkup($replacementString, array());
