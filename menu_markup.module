@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains menu_markup.module
+ * Contains menu_markup.module.
  */
 
 use Drupal\Core\Url;
@@ -10,68 +10,62 @@ use Drupal\menu_markup\Controller\MenuMarkupController;
 
 /**
  * Implements hook_install().
- *
- * @return none
  */
-function menu_markup_install() 
-{
-    $url = Url::fromRoute('menu_markup_configure');
+function menu_markup_install() {
 
-    drupal_set_message(t('Congrats! menu_markup settings are available under ' . \Drupal::l('the configuration menu', $url)));
+  $url = Url::fromRoute('menu_markup_configure');
+
+  drupal_set_message(t('Congrats! menu_markup settings are available under ' . \Drupal::l('the configuration menu', $url)));
 }
 
 /**
  * Implements hook_menu().
- *
- * @return array
  */
-function menu_markup_menu() 
-{
-    $items['admin/config/system/menu_markup'] = array(
+function menu_markup_menu() {
+
+  $items['admin/config/system/menu_markup'] = array(
     'title' => 'Menu Markup Configuration',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_markup_form'),
     'access arguments' => array('administer users'),
     'type' => MENU_NORMAL_ITEM,
-    );
- 
-    return $items;
+  );
+
+  return $items;
 }
 
 /**
- * Admin form to configure markup for menu titles
+ * Admin form to configure markup for menu titles.
  *
- * @param array                                $form
+ * @param array $form
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *
  * @return array
  */
-function menu_markup_form($form, &$form_state) 
-{
-    $form['menu_markup_configuration'] = array(
+function menu_markup_form($form, &$form_state) {
+
+  $form['menu_markup_configuration'] = array(
     '#type' => 'textarea',
     '#title' => t('Menu Markup Configuration'),
     '#rows' => 15,
-    '#required' => true,
+    '#required' => TRUE,
     '#default_value' => variable_get('menu_markup_configuration', ''),
-    );
- 
-    return system_settings_form($form);
+  );
+
+  return system_settings_form($form);
 }
 
 /**
  * Implements hook_menu_links_discovered_alter().
- *
- * @return none
  */
-function menu_markup_menu_links_discovered_alter(&$links) 
-{
-    // Creat a new MenuMarkupController object
-    $markup = new MenuMarkupController(Drupal::service('config.factory'), Drupal::service('entity.query'), $links);
+function menu_markup_menu_links_discovered_alter(&$links) {
 
-    // Parse the menu config as performed in the admin panel
-    $markup->parseMenuConfig();
+  // Creat a new MenuMarkupController object.
+  $markup = new MenuMarkupController(Drupal::service('config.factory'), Drupal::service('entity.query'), $links);
 
-    // Rebuild the menu links!
-    $links = $markup->rebuildMenuLinks();
+  // Parse the menu config as performed in the admin panel.
+  $markup->parseMenuConfig();
+
+  // Rebuild the menu links!
+  $links = $markup->rebuildMenuLinks();
 }
