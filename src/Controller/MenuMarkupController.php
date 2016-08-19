@@ -13,19 +13,22 @@ namespace Drupal\menu_markup\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Component\Render\FormattableMarkup;
 
 class MenuMarkupController extends ControllerBase
 {
 
     protected $configFactory;
-    private        $_markupOptions;
-    private        $_storedSettings;
-    private        $_links;
+    protected $entityQuery;
+    private   $_markupOptions;
+    private   $_storedSettings;
+    private   $_links;
 
-    public function __construct( ConfigFactory $configFactory, $links )
+    public function __construct( ConfigFactory $configFactory, QueryFactory $entityQuery, $links )
     {
         $this->configFactory = $configFactory;
+        $this->entityQuery = $entityQuery;
         $this->_links = $links;
     }
 
@@ -35,7 +38,8 @@ class MenuMarkupController extends ControllerBase
     public static function create(ContainerInterface $container) 
     {
         return new static(
-        $container->get('config.factory')
+            $container->get('config.factory'),
+            $container->get('entity.query')
         );
     }
 
@@ -91,7 +95,7 @@ class MenuMarkupController extends ControllerBase
 
                 // Do we have a badge count here?
                 if (@$this->_markupOptions[$link['title']]['nodeType'] ) {
-                    $query = \Drupal::entityQuery('node')
+                    $query = $this->entityQuery->get('node')
                       ->condition('type', $this->_markupOptions[$link['title']]['nodeType'])
                       ->condition('status', 1);
 
