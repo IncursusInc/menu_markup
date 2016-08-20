@@ -112,7 +112,7 @@ class MenuMarkupController extends ControllerBase {
         // Token replacement.
         $replacementString = $this->markupOptions[$link['title']]['menuTitle'];
 
-        // This is where the magic happens - convert it
+        // This is where the magic happens - convert it.
         $this->links[$index]['title'] = new FormattableMarkup($replacementString, array('%title' => $menuTitleStr, '%nodeCount' => $nodeType));
       }
     }
