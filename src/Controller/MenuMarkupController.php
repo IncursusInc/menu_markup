@@ -49,7 +49,7 @@ class MenuMarkupController extends ControllerBase {
   }
 
   /**
-   * Parse the configuration into something usable - one entry per line, so let's split it up.
+   * Parse the configuration into something usable - one entry per line.
    *
    *  The configuration lines should be in the following format:
    *
@@ -58,8 +58,8 @@ class MenuMarkupController extends ControllerBase {
    *  Where:
    *
    *  MENU_TITLE = The name of the menu item (Home, News Archive, etc.)
-   *  REPLACEMENT_STRING = The string containing markup to replace the MENU_TITLE with
-   *  NODECOUNT = An optional content type machine name which can be used to generate a badge, etc.
+   *  REPLACEMENT_STRING = string containing markup to replace MENU_TITLE with
+   *  NODECOUNT = An optional content type machine name used to generate a badge
    */
   public function parseMenuConfig() {
 
