@@ -19,22 +19,6 @@ function menu_markup_install() {
 }
 
 /**
- * Implements hook_menu().
- */
-function menu_markup_menu() {
-
-  $items['admin/config/system/menu_markup'] = array(
-    'title' => 'Menu Markup Configuration',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_markup_form'),
-    'access arguments' => array('administer users'),
-    'type' => MENU_NORMAL_ITEM,
-  );
-
-  return $items;
-}
-
-/**
  * Admin form to configure markup for menu titles.
  *
  * @param array $form
@@ -67,5 +51,7 @@ function menu_markup_menu_links_discovered_alter(&$links) {
   $markup->parseMenuConfig();
 
   // Rebuild the menu links!
-  $links = $markup->rebuildMenuLinks();
+  if ($markup->haveLinks()) {
+    $links = $markup->rebuildMenuLinks();
+  }
 }

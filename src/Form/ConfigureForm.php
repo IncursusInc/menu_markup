@@ -6,7 +6,8 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Configure form.
+ * @file
+ * Configure form for the menu_markup options.
  */
 class ConfigureForm extends ConfigFormBase {
 
@@ -14,6 +15,7 @@ class ConfigureForm extends ConfigFormBase {
    * {@inheritdoc}
    *
    * @return string
+   *    Returns the form ID.
    */
   public function getFormId() {
 
@@ -24,6 +26,7 @@ class ConfigureForm extends ConfigFormBase {
    * {@inheritdoc}
    *
    * @return array
+   *    Returns an array of editable config names.
    */
   protected function getEditableConfigNames() {
 
@@ -36,9 +39,12 @@ class ConfigureForm extends ConfigFormBase {
    * {@inheritdoc}
    *
    * @param array $form
+   *    The form object.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *    The form state interface.
    *
    * @return mixed
+   *    Returns the result of the buildForm() method of the parent.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
@@ -60,9 +66,9 @@ class ConfigureForm extends ConfigFormBase {
    * {@inheritdoc}
    *
    * @param array $form
+   *    The form object.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *
-   * @return none
+   *    The form state interface.
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
@@ -72,11 +78,17 @@ class ConfigureForm extends ConfigFormBase {
    * {@inheritdoc}
    *
    * @param array $form
+   *    The form object.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *    The form state interface.
    *
-   * @return none
+   * @return mixed
+   *    Returns the result of the submitForm() method of the parent.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+
+    // Flush Drupal cache so that the newly rebuilt menu items will appear :)
+    drupal_flush_all_caches();
 
     $config = $this->config('menu_markup.settings');
     $config->set('config', $form_state->getValue('menu_markup_configuration'))->save();

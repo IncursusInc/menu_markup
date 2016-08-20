@@ -9,24 +9,32 @@ use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Component\Render\FormattableMarkup;
 
 /**
- *
+ * @file
+ * Contains the menu_markup controller.
  */
 class MenuMarkupController extends ControllerBase {
 
   protected $configFactory;
   protected $entityQuery;
-  private   $_markupOptions;
-  private   $_storedSettings;
-  private   $_links;
+  private   $markupOptions;
+  private   $storedSetings;
+  private   $links;
 
   /**
+   * Constructs a new class instance.
    *
+   * @param \Drupal\Core\Config\ConfigFactory $configFactory
+   *    Drupal ConfigFactory object.
+   * @param \Drupal\Core\Entity\Query\QueryFactory $entityQuery
+   *    Drupal QueryFactory object.
+   * @param array $links
+   *    An array of links as seen in hook_menu_links_discovered_alter()
    */
   public function __construct(ConfigFactory $configFactory, QueryFactory $entityQuery, $links) {
 
     $this->configFactory = $configFactory;
     $this->entityQuery = $entityQuery;
-    $this->_links = $links;
+    $this->links = $links;
   }
 
   /**
@@ -52,24 +60,22 @@ class MenuMarkupController extends ControllerBase {
    *  MENU_TITLE = The name of the menu item (Home, News Archive, etc.)
    *  REPLACEMENT_STRING = The string containing markup to replace the MENU_TITLE with
    *  NODECOUNT = An optional content type machine name which can be used to generate a badge, etc.
-   *
-   * @return none
    */
   public function parseMenuConfig() {
 
     // Fetch the configuration for the menu_markup module.
-    $this->_storedSettings = $this->configFactory->get('menu_markup.settings')->get('config');
+    $this->storedSetings = $this->configFactory->get('menu_markup.settings')->get('config');
 
-    $this->_markupOptions = array();
-    $lines = preg_split('/\r\n|[\r\n]/', $this->_storedSettings);
+    $this->markupOptions = array();
+    $lines = preg_split('/\r\n|[\r\n]/', $this->storedSetings);
 
     foreach ($lines as $line) {
       $tmp = explode('|', $line);
 
-      if (count($tmp) > 0) {
-        $this->_markupOptions[$tmp[0]]['menuTitle'] = $tmp[1];
+      if (count($tmp) >= 2) {
+        $this->markupOptions[$tmp[0]]['menuTitle'] = $tmp[1];
         if (isset($tmp[2])) {
-          $this->_markupOptions[$tmp[0]]['nodeType'] = $tmp[2];
+          $this->markupOptions[$tmp[0]]['nodeType'] = $tmp[2];
         }
       }
     }
@@ -80,19 +86,20 @@ class MenuMarkupController extends ControllerBase {
    * Rebuild the menu links!
    *
    * @return array
+   *    Returns the modified array of links.
    */
   public function rebuildMenuLinks() {
 
     // Now, let's rebuild the menu links.
-    foreach ($this->_links as $index => $link) {
-      if (@array_key_exists($link['title'], $this->_markupOptions)) {
+    foreach ($this->links as $index => $link) {
+      if (@array_key_exists($link['title'], $this->markupOptions)) {
         $translatedMenuTitle = $this->t($link['title']);
         $menuTitleStr = (string) $translatedMenuTitle;
 
         // Do we have a badge count here?
-        if (@$this->_markupOptions[$link['title']]['nodeType']) {
+        if (@$this->markupOptions[$link['title']]['nodeType']) {
           $query = $this->entityQuery->get('node')
-                      ->condition('type', $this->_markupOptions[$link['title']]['nodeType'])
+                      ->condition('type', $this->markupOptions[$link['title']]['nodeType'])
                       ->condition('status', 1);
 
           $nids = $query->execute();
@@ -103,16 +110,31 @@ class MenuMarkupController extends ControllerBase {
         }
 
         // Token replacement.
-        $replacementString = $this->_markupOptions[$link['title']]['menuTitle'];
+        $replacementString = $this->markupOptions[$link['title']]['menuTitle'];
         $replacementString = preg_replace('/\{\{\s*title\s*\}\}/', $menuTitleStr, $replacementString);
         $replacementString = preg_replace('/\{\{\s*nodeCount\s*\}\}/', $nodeType, $replacementString);
 
         // This is where the magic happens - convert it!
-        $this->_links[$index]['title'] = new FormattableMarkup($replacementString, array());
+        $this->links[$index]['title'] = new FormattableMarkup($replacementString, array());
       }
     }
 
-    return $this->_links;
+    return $this->links;
+  }
+
+  /**
+   * Check to see if we have any links.
+   *
+   * @return bool
+   *    Returns true if there are customized links, false if not.
+   */
+  public function haveLinks() {
+    if (isset($this->links) && count($this->links)) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
   }
 
 }

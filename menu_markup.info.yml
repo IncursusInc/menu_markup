@@ -2,4 +2,5 @@ name: Menu Markup
 type: module
 description: Allows markup to be used in menu link text
 core: 8.x
+package: User Interface
 configure: menu_markup_configure
