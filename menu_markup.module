@@ -5,53 +5,99 @@
  * Contains menu_markup.module.
  */
 
-use Drupal\Core\Url;
-use Drupal\menu_markup\Controller\MenuMarkupController;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
- * Implements hook_install().
+ * Implements form_menu_link_content_form_alter.
  */
-function menu_markup_install() {
+function menu_markup_form_menu_link_content_form_alter(array &$form, $form_state, $form_id) {
 
-  $url = Url::fromRoute('menu_markup_configure');
+  // Get a list of node types/machine names and build a dynamic select list.
+  $nodeTypeNames = node_type_get_names();
 
-  drupal_set_message(t('Congrats! menu_markup settings are available under ' . \Drupal::l('the configuration menu', $url)));
+  $fields = \Drupal::config('menu_markup.config')->get('fields') ?: [];
+
+  $fields['node_count_type']['options'] = $nodeTypeNames;
+
+  // Get any existing values for the link currently being edited.
+  $link = $form_state->getFormObject()->getEntity();
+  $linkOptions = $link->link->first()->options ?: [];
+  $existingvalues = isset($linkOptions['menu_markup']) ? $linkOptions['menu_markup'] : [];
+
+  // Build the form elements for adding menu_markup stuff to the link currently being edited.
+  $form['options']['menu_markup'] = [
+    '#type' => 'details',
+    '#title' => t('Menu Markup'),
+    '#weight' => -2,
+    '#tree' => TRUE,
+  ];
+
+  foreach ($fields as $attribute => $info) {
+
+    $fieldType = !empty($info['options']) ? 'select' : 'textarea';
+
+    $form['options']['menu_markup'][$attribute] = [
+      '#type' => $fieldType,
+      '#title' => $info['label'],
+      '#description' => $info['description'],
+      '#default_value' => isset($existingValues[$attribute]) ? $existingValues[$attribute] : '',
+    ];
+
+    if ($fieldType == 'select') {
+      $form['options']['menu_markup'][$attribute]['#empty_option'] = t('- Select -');
+      $form['options']['menu_markup'][$attribute]['#options'] = $info['options'];
+    }
+  }
+
+  // Add the submit handler.
+  $form['actions']['submit']['#submit'][] = 'menu_markup_menu_link_content_form_submit';
 }
 
 /**
- * Admin form to configure markup for menu titles.
+ * Submit function / saves menu_markup options for the link being currently edited.
  *
  * @param array $form
+ *    Drupal form array.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
- *
- * @return array
+ *    Drupal FormStateInterface object.
  */
-function menu_markup_form($form, &$form_state) {
+function menu_markup_menu_link_content_form_submit($form, FormStateInterface $form_state) {
+  $menu_link = $form_state->getFormObject()->getEntity();
+  $options = ['menu_markup' => $form_state->getValue('menu_markup')];
+  $menu_link_options = $menu_link->link->first()->options;
 
-  $form['menu_markup_configuration'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Menu Markup Configuration'),
-    '#rows' => 15,
-    '#required' => TRUE,
-    '#default_value' => variable_get('menu_markup_configuration', ''),
-  );
-
-  return system_settings_form($form);
+  $menu_link->link->first()->options = array_merge($menu_link_options, $options);
+  $menu_link->save();
 }
 
 /**
- * Implements hook_menu_links_discovered_alter().
+ * Implements hook_link_alter().
  */
-function menu_markup_menu_links_discovered_alter(&$links) {
+function menu_markup_link_alter(&$variables) {
 
-  // Creat a new MenuMarkupController object.
-  $markup = new MenuMarkupController(Drupal::service('config.factory'), Drupal::service('entity.query'), $links);
+  // Only do this if they've configured menu_markup properly for this link.
+  if (isset($variables['options']['menu_markup']['link_markup'])) {
 
-  // Parse the menu config as performed in the admin panel.
-  $markup->parseMenuConfig();
+    // If we have a node type selected for this menu item, get the node count!
+    if (isset($variables['options']['menu_markup']['node_count_type'])) {
+      $query = \Drupal::entityQuery('node')
+                  ->condition('type', $variables['options']['menu_markup']['node_count_type'])
+                  ->condition('status', 1);
 
-  // Rebuild the menu links!
-  if ($markup->haveLinks()) {
-    $links = $markup->rebuildMenuLinks();
+      $nids = $query->execute();
+      $nodeCount = count($nids);
+    }
+    else {
+      $nodeCount = 0;
+    }
+
+    // Rebuild the menu text.
+    $titleText = $variables['text'];
+
+    $markup = new FormattableMarkup($variables['options']['menu_markup']['link_markup'],
+                       array('@title' => $titleText, '@nodeCount' => $nodeCount));
+
+    $variables['text'] = $markup;
   }
+
 }

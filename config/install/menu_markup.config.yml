@@ -1,0 +1,7 @@
+fields:
+  link_markup:
+    label: 'Link Markup'
+    description: ''
+  node_count_type:
+    label: 'Node Type Count'
+    description: ''
