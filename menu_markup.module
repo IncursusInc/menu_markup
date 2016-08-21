@@ -58,10 +58,10 @@ function menu_markup_form_menu_link_content_form_alter(array &$form, $form_state
  *
  * @param array $form
  *    Drupal form array.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * @param \Drupal\Core\Form\FormState $form_state
  *    Drupal FormStateInterface object.
  */
-function menu_markup_menu_link_content_form_submit($form, FormStateInterface $form_state) {
+function menu_markup_menu_link_content_form_submit($form, $form_state) {
   $menu_link = $form_state->getFormObject()->getEntity();
   $options = ['menu_markup' => $form_state->getValue('menu_markup')];
   $menu_link_options = $menu_link->link->first()->options;
