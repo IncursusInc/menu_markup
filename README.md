@@ -10,27 +10,24 @@ This version of the module only works with the v8.0.x releases of Drupal.
 # Requirements
 Drupal 8.x
 
-Also, when creating menu links in Drupal, you cannot use the autocomplete functionality in the "link" field. That will not make the link "discoverable" by hook_menu_links_discovered_alter(). Instead, just type the path to the node manually into that field.
-
 # Standard usage scenario
 1. Download and install the module.
-2. Open admin/config/menu_markup/configure.
-3. Enter in your desired values, with each menu item appearing on a separate line
-4. Values should be in the format of: MENU_TITLE_TEXT|TITLE_WITH_MARKUP|NODE_TYPE
-5. A special token {{title}} can be used on the right hand side of the pipe sign to substitute in the translated original title text
-6. If NODE_TYPE is specified, a special token called {{nodeCount}} will be available representing the total count of published nodes of type NODE_TYPE (useful for Bootstrap badges in menu items)
-6. You will need to clear (rebuild) your Drupal cache after saving your configuration (sadly) in order to see any changes you've made.
+2. Open up the edit page for a menu link
+3. Expand the Menu Markup section to see the options
+4. Enter in your link markup
+5. A special token @title can be used to substitute in the translated original title text
+6. If you select a node type count, another special token called @nodeCount will be available representing the total count of published nodes of the selected type (useful for Bootstrap badges in menu items)
 
 # Demo Site
 You can see a demo of this in action on the Incursus web site (http://incurs.us)
 
-# Example configuration lines
+# Example link markup
 
 ```
-Home|<span class="fa fa-home"></span>&nbsp;&nbsp;{{title}}
-Some Menu Title|<span class="fa fa-star"></span>&nbsp;&nbsp;<strong>{{title}}</strong>
-Articles|<span class="fa fa-star"></span>&nbsp;&nbsp;<strong>{{title}}</strong> <span class="badge">{{nodeCount}}</span>|article
-...
+<span class="fa fa-home"></span>&nbsp;&nbsp;@title
+```
+```
+<span class="fa fa-star"></span>&nbsp;&nbsp;<strong>@title</strong> <span class="badge">@nodeCount</span>
 ```
 
 Credits / contact
