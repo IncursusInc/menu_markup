@@ -22,7 +22,7 @@ function menu_markup_form_menu_link_content_form_alter(array &$form, $form_state
   // Get any existing values for the link currently being edited.
   $link = $form_state->getFormObject()->getEntity();
   $linkOptions = $link->link->first()->options ?: [];
-  $existingvalues = isset($linkOptions['menu_markup']) ? $linkOptions['menu_markup'] : [];
+  $existingValues = isset($linkOptions['menu_markup']) ? $linkOptions['menu_markup'] : [];
 
   // Build the form elements for adding menu_markup stuff to the link currently being edited.
   $form['options']['menu_markup'] = [
