@@ -5,10 +5,14 @@ By default, Drupal 8 will not accept HTML markup as part of a menu title. This m
 
 This can be very handy if you want to show a glyphicon from Bootstrap or an icon from FontAwesome, etc. in front of your menu titles.
 
-This version of the module only works with the v8.0.x releases of Drupal.
+Additionally, this module has functionality that will easily allow you to put Bootstrap-style "badges" next to your menu items, representing node counts (e.h. "Articles (30)", etc.).
+
+There are similar modules for D7, but they seem to have been abandoned. Further, this module takes the concept a step or two further with functionality.
+
+The latest version can usually be found on GitHub before here [3].
 
 # Requirements
-Drupal 8.x
+This version of the module only works with the v8.x releases of Drupal.
 
 # Standard usage scenario
 1. Download and install the module.
@@ -19,7 +23,7 @@ Drupal 8.x
 6. If you select a node type count, another special token called @nodeCount will be available representing the total count of published nodes of the selected type (useful for Bootstrap badges in menu items)
 
 # Demo Site
-You can see a demo of this in action on the Incursus web site (http://incurs.us)
+To see a demo, visit the <a href="http://incurs.us" target="_blank">Incursus web site</a> and check out our top navbar menu.
 
 # Example link markup
 
@@ -29,6 +33,11 @@ You can see a demo of this in action on the Incursus web site (http://incurs.us)
 ```
 <span class="fa fa-star"></span>&nbsp;&nbsp;<strong>@title</strong> <span class="badge">@nodeCount</span>
 ```
+
+# Similar/Related Modules
+
+1. <a href="https://www.drupal.org/project/special_menu_items">Special Menu Items</a>
+2. <a href="https://www.drupal.org/project/menu_attributes">menu_attributes</a>
 
 Credits / contact
 -------------------------------------------------------------------
@@ -42,3 +51,4 @@ References
 -------------------------------------------------------------------
 1. https://www.drupal.org/u/incursus
 2. http://incurs.us
+3. https://github.com/IncursusInc/menu_markup
