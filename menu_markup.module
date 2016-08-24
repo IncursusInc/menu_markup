@@ -79,33 +79,74 @@ function menu_markup_menu_link_content_form_submit($form, $form_state) {
 }
 
 /**
+ * Implements hook_link_alter().
+ */
+function menu_markup_link_alter(&$variables) {
+
+    // These links are processed during page rendering, not during cache rebuilding.
+    if (!isset($variables['options']['menu_markup']['already_processed']) || !$variables['options']['menu_markup']['already_processed']) {
+
+        if (isset($variables['options']['menu_markup']['link_markup']) && strlen($variables['options']['menu_markup']['link_markup']) > 0) {
+
+            // If we have a node type selected for this menu item, get the node count!
+            if (isset($variables['options']['menu_markup']['node_count_type'])) {
+            $query = \Drupal::entityQuery('node')
+                          ->condition('type', $l['options']['menu_markup']['node_count_type'])
+                          ->condition('status', 1);
+
+            $nids = $query->execute();
+            $nodeCount = count($nids);
+          }
+          else {
+            $nodeCount = 0;
+          }
+
+          // Rebuild the menu text.
+          $titleText = $variables['text'];
+
+          $markup = new FormattableMarkup($variables['options']['menu_markup']['link_markup'],
+                                   array('@title' => $titleText, '@nodeCount' => $nodeCount));
+          $variables['text'] = $markup;
+
+          $variables['options']['menu_markup']['already_processed'] = true;
+        }
+    }
+}
+
+/**
  * Implements hook_menu_links_discovered_alter().
  */
 function menu_markup_menu_links_discovered_alter(&$links) {
 
-  foreach ($links as $index => $l) {
-    if (isset($l['options']['menu_markup']['link_markup']) && strlen($l['options']['menu_markup']['link_markup']) > 0) {
+    // These links are processed during cache rebuilding, not page rendering.
+    foreach ($links as $index => $l) {
+        if (!isset($l['options']['menu_markup']['already_processed']) || !$l['options']['menu_markup']['already_processed']) {
+            if (isset($l['options']['menu_markup']['link_markup']) && strlen($l['options']['menu_markup']['link_markup']) > 0) {
 
-      // If we have a node type selected for this menu item, get the node count!
-      if (isset($l['options']['menu_markup']['node_count_type'])) {
-        $query = \Drupal::entityQuery('node')
-                          ->condition('type', $l['options']['menu_markup']['node_count_type'])
-                          ->condition('status', 1);
+                // If we have a node type selected for this menu item, get the node count!
+                if (isset($l['options']['menu_markup']['node_count_type'])) {
 
-        $nids = $query->execute();
-        $nodeCount = count($nids);
-      }
-      else {
-        $nodeCount = 0;
-      }
+                    $query = \Drupal::entityQuery('node')
+                              ->condition('type', $l['options']['menu_markup']['node_count_type'])
+                              ->condition('status', 1);
 
-      // Rebuild the menu text.
-      $titleText = $l['title'];
+                    $nids = $query->execute();
+                    $nodeCount = count($nids);
 
-      $markup = new FormattableMarkup($l['options']['menu_markup']['link_markup'],
-                               array('@title' => $titleText, '@nodeCount' => $nodeCount));
-      $links[$index]['title'] = $markup;
+                } else {
+                    $nodeCount = 0;
+                }
+
+                // Rebuild the menu text.
+                $titleText = $l['title'];
+
+                $markup = new FormattableMarkup($l['options']['menu_markup']['link_markup'],
+                                   array('@title' => $titleText, '@nodeCount' => $nodeCount));
+                $links[$index]['title'] = $markup;
+
+                $links[$index]['options']['menu_markup']['already_processed'] = true;
+            }
+        }
     }
-  }
 
 }
