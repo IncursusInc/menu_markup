@@ -9,7 +9,7 @@ Additionally, this module has functionality that will easily allow you to put Bo
 
 There are similar modules for D7, but they seem to have been abandoned. Further, this module takes the concept a step or two further with functionality.
 
-The latest version can usually be found on GitHub before here [3].
+NOTE: If you are reading this on Github, we recommend that you visit our <a href="https://www.drupal.org/project/menu_markup">official project page</a> on Drupal.org and install the module as you would any other Drupal module. Code that is committed here at GitHub should be considered in development/bleed edge/etc. 
 
 # Requirements
 This version of the module only works with the v8.x releases of Drupal.
