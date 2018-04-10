@@ -79,6 +79,19 @@ function menu_markup_menu_link_content_form_submit($form, $form_state) {
 }
 
 /**
+ * When saving entity override the default logic in \Drupal\menu_link_content\Entity\MenuLinkContent::preSave
+ * and set rediscover for any link that has a link_markup.
+ * This is needed as only internal:// links are discovered and thus decorated.
+ */
+function menu_markup_menu_link_content_presave($menu_link) {
+	$menu_link_options = $menu_link->link->first()->options;
+	if (isset($menu_link_options['menu_markup']) && strlen($menu_link_options['menu_markup']['link_markup']) > 0) {
+		$menu_link->setRequiresRediscovery(TRUE);
+	}
+}
+
+
+/**
  * Implements hook_link_alter().
  */
 function menu_markup_link_alter(&$variables) {
